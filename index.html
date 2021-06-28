@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam ead</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div>
+                <button id="seed" class="btn btn-primary">Get Data</button>
+            </div>
+        </div>
+        <div class="row">
+            <h1>Products</h1>
+            <table class="table" id="product-table">
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Date of Manf</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">price</th>
+                </tr>
+            </table>
+        </div>
+
+        <div class="row">
+            <h1>Sales</h1>
+            <table class="table" id="sale-table">
+                <tr>
+                    <th scope="col">SINo</th>
+                    <th scope="col">Saleman Id</th>
+                    <th scope="col">DOS</th>
+                    <th scope="col">Poduduct name</th>
+                </tr>
+            </table>
+        </div>
+
+    </div>
+    <script>
+        const getProducts = async () => {
+            const resp = await fetch("http://localhost:8080/api/products");
+            const jsonRes = await resp.json()
+            jsonRes.forEach(item => {
+                const trEl = document.createElement("tr");
+                trEl.innerHTML = `<td>${item.prodName}</td><td>${item.dateOfManf}</td><td>${item.description}</td><td>${item.price}</td> `
+                document.getElementById("product-table").appendChild(trEl)
+            });
+        }
+
+        const getSales = async () => {
+            const resp = await fetch("http://localhost:8080/api/sales");
+            const jsonRes = await resp.json()
+            jsonRes.forEach(item => {
+                const trEl = document.createElement("tr");
+                trEl.innerHTML = `<td>${item.siNo}</td><td>${item.salesmanId}</td><td>${item.dos}</td><td>${item.productName}</td> `
+                document.getElementById("sale-table").appendChild(trEl)
+            });
+        }
+
+        getProducts().then(resp => {
+            getSales().then(res2 => {})
+        }).catch(err => {console.log(err);})
+        document.getElementById("seed").addEventListener("click", async () => {
+            await fetch("http://localhost:8080/api/seed")
+            location.reload();
+        })
+    </script>
+</body>
+</html>
